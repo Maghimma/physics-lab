@@ -274,7 +274,7 @@ function applyCam(){const{theta,phi,R,tgt}=orbit;camera.position.set(tgt.x+R*Mat
 canvas.addEventListener('pointerdown',e=>{orbit.drag=true;orbit.px=e.clientX;orbit.py=e.clientY;$('hint').style.opacity=0;});
 addEventListener('pointermove',e=>{if(!orbit.drag)return;orbit.theta-=(e.clientX-orbit.px)*0.006;orbit.phi=clamp(orbit.phi-(e.clientY-orbit.py)*0.005,0.45,1.45);orbit.px=e.clientX;orbit.py=e.clientY;});
 addEventListener('pointerup',()=>orbit.drag=false);
-function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();fitCam();}
 new ResizeObserver(resize).observe(canvas);
 
 /* ===== three topic groups ===== */
@@ -519,11 +519,13 @@ function updatePressure(){
 
 /* ===== topic switching ===== */
 const cams={hooke:{tgt:new THREE.Vector3(0,8,0),R:30},moments:{tgt:new THREE.Vector3(0,3.5,0),R:30},cog:{tgt:new THREE.Vector3(0,4,0),R:28},pressure:{tgt:new THREE.Vector3(-1,6,0),R:40}};
+let curTopic='hooke';
+function fitCam(){const c=cams[curTopic];if(!c)return;const narrow=innerWidth<560,portrait=innerHeight>=innerWidth;orbit.R=c.R*(narrow?(portrait?1.9:1.35):1);}  // pull back on small/portrait screens so the whole apparatus fits
 function setTopic(t){
   gHooke.visible=t==='hooke';gMoments.visible=t==='moments';gCog.visible=t==='cog';gPressure.visible=t==='pressure';
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.topic===t));
   ['hooke','moments','cog','pressure'].forEach(k=>{$('info-'+k).classList.toggle('on',k===t);$('ctrl-'+k).classList.toggle('on',k===t);});
-  orbit.tgt.copy(cams[t].tgt);orbit.R=cams[t].R;orbit.theta=0.6;orbit.phi=1.02;
+  curTopic=t;orbit.tgt.copy(cams[t].tgt);orbit.theta=0.6;orbit.phi=1.02;fitCam();
 }
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setTopic(b.dataset.topic));
 
