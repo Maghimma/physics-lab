@@ -102,7 +102,28 @@
     .ctrl .row .name{flex-basis:78px;font-size:13px}
     .mbtn{width:50px;height:50px;font-size:26px}
     .seg button{font-size:11.5px;padding:8px 6px}
+    .info{top:178px}
   }
+
+  /* practice */
+  .practice-btn{font-family:'Hanken Grotesk';font-weight:600;font-size:13px;color:#04261f;background:var(--acc);border:none;border-radius:999px;padding:8px 18px;cursor:pointer;box-shadow:0 4px 14px -4px rgba(90,209,192,.5)}
+  .practice-btn:active{transform:scale(.97)}
+  .prac-card{position:relative;background:linear-gradient(160deg,#1a2e49,#0e1c30);border:1px solid var(--line);border-radius:22px;padding:26px 20px 20px;max-width:390px;width:100%;box-shadow:0 26px 64px rgba(0,0,0,.55);max-height:92vh;overflow:auto}
+  .prac-head{font-size:12px;color:var(--muted);letter-spacing:.04em;margin-bottom:12px}
+  .prac-head b{color:var(--acc)}
+  .prac-q{font-family:'Fraunces',serif;font-size:18px;line-height:1.35;color:var(--ink);margin-bottom:14px}
+  .prac-opt{display:block;width:100%;text-align:left;font-family:'Hanken Grotesk';font-size:14px;color:var(--ink);background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+  .prac-opt:hover{border-color:var(--acc)}
+  .prac-opt.correct{background:rgba(90,209,192,.18);border-color:var(--acc);color:#bff3ec}
+  .prac-opt.wrong{background:rgba(255,107,107,.16);border-color:var(--pink);color:#ffc9c9}
+  .prac-num{display:flex;gap:8px;align-items:center}
+  .prac-num input{flex:1;min-width:0;font-family:'Hanken Grotesk';font-size:16px;padding:11px 12px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink)}
+  .prac-num span{color:var(--muted);font-size:14px;min-width:28px}
+  .prac-fb{font-size:13.5px;line-height:1.5;margin-top:12px;color:var(--muted)}
+  .prac-fb.ok{color:var(--acc)} .prac-fb.no{color:#ffb0a0}
+  .pbtn{font-family:'Hanken Grotesk';font-weight:600;font-size:15px;border:none;border-radius:13px;padding:12px;background:var(--acc);color:#04261f;cursor:pointer;width:100%}
+  .pbtn.small{width:auto;padding:11px 16px;font-size:14px}
+  .pbtn:active{transform:scale(.98)}
 </style>
 </head>
 <body>
@@ -124,6 +145,17 @@
     </div>
   </div>
 
+  <div class="ov" id="practice">
+    <div class="prac-card">
+      <button class="tut-skip" onclick="PRAC.close()">Close ✕</button>
+      <div class="prac-head" id="prac-head"></div>
+      <div class="prac-q" id="prac-q"></div>
+      <div class="prac-body" id="prac-body"></div>
+      <div class="prac-fb" id="prac-fb"></div>
+      <button class="pbtn" id="prac-next" onclick="PRAC.next()" style="display:none;margin-top:14px">Next →</button>
+    </div>
+  </div>
+
   <div class="top">
     <div class="title">Virtual <span>Physics Lab</span></div>
     <div class="credit">made by <b>Maghimma</b></div>
@@ -133,6 +165,7 @@
       <button class="tab" data-topic="cog">📦 Gravity</button>
       <button class="tab" data-topic="pressure">💧 Pressure</button>
     </div>
+    <button class="practice-btn" onclick="PRAC.open()">📝 Practice questions</button>
   </div>
   <div class="hint" id="hint">drag to look around ↻</div>
 
@@ -567,6 +600,64 @@ const TUT={i:0,steps:[
   skip(){$('tutorial').classList.remove('on');}
 };
 window.TUT=TUT;
+
+/* ===== practice questions (IGCSE 0625) ===== */
+const TOPICNAME={hooke:"Hooke's Law",moments:"Moments",cog:"Centre of Gravity",pressure:"Pressure"};
+const BANK={
+ hooke:[
+  {type:'mcq',q:"What is the limit of proportionality?",options:[{t:"The point beyond which extension is no longer proportional to the load",ok:true},{t:"The point where the spring snaps",ok:false},{t:"The natural length of the spring",ok:false}],explain:"Up to this point F ∝ x (Hooke's law); beyond it the line curves."},
+  {type:'num',q:"A spring has spring constant k = 20 N/m. A load of 4 N is hung from it. Calculate the extension.",unit:"m",answer:0.2,tol:0.01,explain:"x = F ÷ k = 4 ÷ 20 = 0.2 m."},
+  {type:'mcq',q:"A spring is stretched past its elastic limit, then the load is removed. What happens?",options:[{t:"It returns to its original length",ok:false},{t:"It stays permanently longer than its original length",ok:true},{t:"It keeps stretching on its own",ok:false}],explain:"Past the elastic limit the deformation is permanent (plastic) — it can't fully recover."},
+  {type:'mcq',q:"On a force–extension graph, the gradient of the straight section gives:",options:[{t:"the spring constant k",ok:true},{t:"the limit of proportionality",ok:false},{t:"the weight of the load",ok:false}],explain:"Straight section: F = kx, so gradient = F ÷ x = k."}
+ ],
+ moments:[
+  {type:'num',q:"A force of 5 N acts at a perpendicular distance of 0.4 m from a pivot. Calculate the moment.",unit:"N·m",answer:2,tol:0.01,explain:"Moment = force × distance = 5 × 0.4 = 2 N·m."},
+  {type:'mcq',q:"The principle of moments says a balanced beam has:",options:[{t:"clockwise moments = anticlockwise moments",ok:true},{t:"all the forces equal",ok:false},{t:"the pivot exactly in the middle",ok:false}],explain:"Sum of clockwise moments = sum of anticlockwise moments about the pivot."},
+  {type:'num',q:"A 6 N weight sits 0.5 m to the left of a pivot. What force, placed 0.3 m to the right, balances it?",unit:"N",answer:10,tol:0.1,explain:"6 × 0.5 = F × 0.3 → F = 3 ÷ 0.3 = 10 N."},
+  {type:'mcq',q:"For an object to be in equilibrium:",options:[{t:"there is no resultant force AND no resultant moment",ok:true},{t:"only the forces need to balance",ok:false},{t:"only the moments need to balance",ok:false}],explain:"Both conditions must hold at the same time."}
+ ],
+ cog:[
+  {type:'mcq',q:"An object topples when:",options:[{t:"the line of action of its weight falls outside its base",ok:true},{t:"its centre of gravity is in the middle",ok:false},{t:"it weighs more than its base",ok:false}],explain:"Once the weight's line of action passes the base edge, the moment overturns it."},
+  {type:'mcq',q:"Which object is the MOST stable?",options:[{t:"Wide base, low centre of gravity",ok:true},{t:"Narrow base, high centre of gravity",ok:false},{t:"Narrow base, low centre of gravity",ok:false}],explain:"A wide base + low CoG lets it tilt further before the weight line leaves the base."},
+  {type:'mcq',q:"A ball resting on a flat surface is in which type of equilibrium?",options:[{t:"Neutral",ok:true},{t:"Stable",ok:false},{t:"Unstable",ok:false}],explain:"When moved, its centre of gravity stays at the same height — neutral equilibrium."},
+  {type:'mcq',q:"Why are racing cars built wide and low?",options:[{t:"To lower the CoG and widen the base, making them harder to topple",ok:true},{t:"To make them lighter",ok:false},{t:"Only to reduce air resistance",ok:false}],explain:"Low CoG + wide base = very stable, especially when cornering."}
+ ],
+ pressure:[
+  {type:'num',q:"A force of 200 N acts on an area of 0.5 m². Calculate the pressure.",unit:"Pa",answer:400,tol:1,explain:"p = F ÷ A = 200 ÷ 0.5 = 400 Pa."},
+  {type:'num',q:"Find the pressure due to water at a depth of 3 m. (ρ = 1000 kg/m³, g = 10 N/kg)",unit:"Pa",answer:30000,tol:50,explain:"Δp = ρg∆h = 1000 × 10 × 3 = 30 000 Pa (30 kPa)."},
+  {type:'mcq',q:"The pressure at a point in a liquid depends on:",options:[{t:"the depth and the density of the liquid",ok:true},{t:"the shape of the container",ok:false},{t:"the width of the container",ok:false}],explain:"p = ρg∆h — only depth and density matter, not the container's shape."},
+  {type:'mcq',q:"Why does a sharp knife cut more easily than a blunt one?",options:[{t:"Smaller area → higher pressure for the same force",ok:true},{t:"It uses more force",ok:false},{t:"It is heavier",ok:false}],explain:"p = F ÷ A: a small contact area gives a large pressure."}
+ ]
+};
+const PRAC={topic:'hooke',i:0,score:0,answered:false,
+  qs(){return BANK[this.topic]||[];},
+  open(){this.topic=curTopic;this.i=0;this.score=0;this.render();$('practice').classList.add('on');},
+  close(){$('practice').classList.remove('on');},
+  head(){$('prac-head').innerHTML=`${TOPICNAME[this.topic]} · Q${Math.min(this.i+1,this.qs().length)}/${this.qs().length} · score <b>${this.score}</b>`;},
+  render(){const qs=this.qs();if(this.i>=qs.length){this.end();return;}
+    const q=qs[this.i];this.answered=false;this.head();
+    $('prac-q').innerHTML=q.q;$('prac-fb').textContent='';$('prac-fb').className='prac-fb';$('prac-next').style.display='none';
+    const b=$('prac-body');b.innerHTML='';
+    if(q.type==='mcq'){q.options.forEach((o,idx)=>{const btn=document.createElement('button');btn.className='prac-opt';btn.textContent=o.t;btn.onclick=()=>this.mcq(idx,btn);b.appendChild(btn);});}
+    else{b.innerHTML=`<div class="prac-num"><input type="number" id="prac-input" placeholder="answer" step="any"><span>${q.unit||''}</span><button class="pbtn small" onclick="PRAC.num()">Check</button></div>`;}
+  },
+  mcq(idx,btn){if(this.answered)return;this.answered=true;const q=this.qs()[this.i];
+    document.querySelectorAll('.prac-opt').forEach((el,i)=>{if(q.options[i].ok)el.classList.add('correct');});
+    if(q.options[idx].ok)this.score++;else btn.classList.add('wrong');
+    this.fb(q.options[idx].ok,q.explain);},
+  num(){if(this.answered)return;const q=this.qs()[this.i];const v=parseFloat($('prac-input').value);
+    if(isNaN(v)){$('prac-fb').className='prac-fb';$('prac-fb').textContent='Type a number first.';return;}
+    this.answered=true;const ok=Math.abs(v-q.answer)<=(q.tol||0.01);if(ok)this.score++;this.fb(ok,q.explain);},
+  fb(ok,ex){const f=$('prac-fb');f.className='prac-fb '+(ok?'ok':'no');f.innerHTML=(ok?'✓ Correct! ':'✗ Not quite. ')+ex;
+    this.head();$('prac-next').style.display='block';$('prac-next').textContent=(this.i>=this.qs().length-1)?'See score →':'Next →';},
+  next(){this.i++;this.render();},
+  end(){const n=this.qs().length;$('prac-head').innerHTML=`${TOPICNAME[this.topic]} · done`;
+    $('prac-q').innerHTML=`You scored <b>${this.score}/${n}</b> 🎉`;
+    $('prac-body').innerHTML=`<button class="pbtn" onclick="PRAC.open()">Try again ↺</button>`;
+    $('prac-fb').className='prac-fb';$('prac-fb').innerHTML=this.score===n?'Perfect — you’ve got this topic down.':this.score>=n*0.6?'Solid. Review the ones you missed and go again.':'Re-explore the lab, then retry — it’ll click.';
+    $('prac-next').style.display='none';}
+};
+window.PRAC=PRAC;
 
 /* ===== build + loop ===== */
 buildHooke();buildMoments();buildCog();buildPressure();setTopic('hooke');
