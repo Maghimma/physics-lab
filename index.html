@@ -649,7 +649,9 @@ function tick(){requestAnimationFrame(tick);const dt=Math.min(clock.getDelta(),0
   if(COG.toppling&&gCog.visible){COG.topAngle=Math.min(COG.topAngle+dt*1.6,Math.PI/2-0.04);updateCog();}
   renderer.render(scene,camera);}
 resize();applyCam();tick();
-setTimeout(()=>{$('loader').classList.add('hide');TUT.open();},800);
+const _embed=new URLSearchParams(location.search).has('embed');   // clean embed for the Dabble hero (no tutorial/help/credit)
+if(_embed){const h=$('helpBtn');if(h)h.style.display='none';document.querySelectorAll('.credit').forEach(c=>c.style.display='none');}
+setTimeout(()=>{$('loader').classList.add('hide');if(!_embed)TUT.open();},800);
 </script>
 </body>
 </html>
