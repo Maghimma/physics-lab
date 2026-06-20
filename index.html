@@ -637,7 +637,9 @@ const CHAL={active:false,step:0,target:8,
 window.CHAL=CHAL;
 
 /* ===== build + loop ===== */
-buildHooke();buildMoments();buildCog();buildPressure();setTopic('hooke');
+buildHooke();buildMoments();buildCog();buildPressure();
+const _t0=new URLSearchParams(location.search).get('topic');
+setTopic(['hooke','moments','cog','pressure'].includes(_t0)?_t0:'hooke');   // deep-link from the Dabble hub
 const clock=new THREE.Clock();
 function tick(){requestAnimationFrame(tick);const dt=Math.min(clock.getDelta(),0.05);
   if(!orbit.drag)orbit.theta+=dt*0.04;applyCam();
