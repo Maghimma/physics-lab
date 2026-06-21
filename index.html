@@ -638,8 +638,10 @@ window.CHAL=CHAL;
 
 /* ===== build + loop ===== */
 buildHooke();buildMoments();buildCog();buildPressure();
-const _t0=new URLSearchParams(location.search).get('topic');
-setTopic(['hooke','moments','cog','pressure'].includes(_t0)?_t0:'hooke');   // deep-link from the Dabble hub
+const _q=new URLSearchParams(location.search), _pick=['hooke','moments','cog','pressure'];
+const _only=_q.get('only'), _t0=_q.get('topic');
+setTopic(_pick.includes(_only)?_only:(_pick.includes(_t0)?_t0:'hooke'));   // deep-link / single-topic from the Dabble hub
+if(_pick.includes(_only)){const t=document.querySelector('.tabs');if(t)t.style.display='none';}   // single-topic page → hide the switcher
 const clock=new THREE.Clock();
 function tick(){requestAnimationFrame(tick);const dt=Math.min(clock.getDelta(),0.05);
   if(!orbit.drag)orbit.theta+=dt*0.04;applyCam();
